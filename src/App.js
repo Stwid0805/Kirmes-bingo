@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { database, ref, set, onValue } from './firebaseConfig';
-import { remove } from "firebase/database"; // Importiere `remove` direkt aus `firebase/database`
+import { remove } from "firebase/database";
 import './App.css';
 
 const initialItems = [
@@ -131,6 +131,13 @@ function App() {
 
   return (
     <div className="App">
+      {/* Bild oben rechts */}
+      <img 
+        src="/images/logo.png" // Verwende den Pfad des Bildes im `public`-Ordner oder eine URL
+        alt="Logo" 
+        className="top-right-image" // CSS-Klasse für das Styling
+      />
+      
       <h1>Kirmes Bingo</h1>
       {!isNameSubmitted ? (
         <div>
