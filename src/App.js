@@ -24,23 +24,22 @@ function App() {
   const [customTask, setCustomTask] = useState('');
 
   useEffect(() => {
-    // Nehme die ersten 5 Hauptaufgaben und markiere sie als nicht löschbar
+    // Initialisiere die Bingo-Karte mit den 5 Hauptaufgaben und 5 zufälligen Aufgaben
     const mainTasks = initialItems.slice(0, 5).map(item => ({
       text: typeof item === 'string' ? item : item.text,
       checked: false,
       isMainTask: true
     }));
 
-    // Mische die restlichen Aufgaben und füge sie hinzu
     const otherTasks = initialItems.slice(5).sort(() => 0.5 - Math.random()).map(item => ({
       text: typeof item === 'string' ? item : item.text,
       checked: false,
       isMainTask: false
     }));
 
-    // Setze die Bingo-Karte mit 5 Hauptaufgaben und 5 zufälligen Aufgaben
     setBingoCard([...mainTasks, ...otherTasks.slice(0, 5)]);
 
+    // Listener für die Rangliste einrichten, um Updates in Echtzeit anzuzeigen
     const leaderboardRef = ref(database, 'leaderboard');
     onValue(leaderboardRef, snapshot => {
       const data = snapshot.val();
@@ -49,6 +48,8 @@ function App() {
           .map(([name, { progress }]) => ({ name, progress }))
           .sort((a, b) => b.progress - a.progress);
         setLeaderboard(sortedLeaderboard);
+      } else {
+        setLeaderboard([]);
       }
     });
   }, []);
@@ -101,7 +102,6 @@ function App() {
     const newCard = bingoCard.filter((_, i) => i !== index);
     setBingoCard(newCard);
 
-    // Update progress after deletion
     const newProgress = newCard.filter(item => item.checked).length;
     setProgress(newProgress);
     if (username) {
@@ -151,7 +151,6 @@ function App() {
           </div>
           <h2>Fortschritt: {progress}/10</h2>
 
-          {/* Eingabefeld für benutzerdefinierte Bingo-Aufgaben */}
           <div style={{ marginTop: "20px" }}>
             <input
               type="text"
