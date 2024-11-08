@@ -23,8 +23,17 @@ function App() {
   const [isNameSubmitted, setIsNameSubmitted] = useState(false);
   const [customTask, setCustomTask] = useState('');
 
+  // Laden des Benutzernamens aus localStorage beim Start
   useEffect(() => {
-    // Initialisiere die Bingo-Karte mit den 5 Hauptaufgaben und 5 zufälligen Aufgaben
+    const storedUsername = localStorage.getItem("username");
+    if (storedUsername) {
+      setUsername(storedUsername);
+      setIsNameSubmitted(true);
+    }
+  }, []);
+
+  // Initialisieren der Bingo-Karte und des Echtzeit-Listeners für die Rangliste
+  useEffect(() => {
     const mainTasks = initialItems.slice(0, 5).map(item => ({
       text: typeof item === 'string' ? item : item.text,
       checked: false,
@@ -39,7 +48,6 @@ function App() {
 
     setBingoCard([...mainTasks, ...otherTasks.slice(0, 5)]);
 
-    // Listener für die Rangliste einrichten, um Updates in Echtzeit anzuzeigen
     const leaderboardRef = ref(database, 'leaderboard');
     onValue(leaderboardRef, snapshot => {
       const data = snapshot.val();
@@ -78,6 +86,7 @@ function App() {
       return;
     }
     setIsNameSubmitted(true);
+    localStorage.setItem("username", username); // Speichert den Namen im localStorage
     set(ref(database, `leaderboard/${username}`), { progress: 0 });
   };
 

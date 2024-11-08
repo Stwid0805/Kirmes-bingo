@@ -1,13 +1,12 @@
 // src/firebaseConfig.js
 import { initializeApp } from "firebase/app";
-import { getDatabase, ref, set, onValue } from "firebase/database"; // Importiere die Funktionen für die Realtime Database
+import { getDatabase, ref, set, onValue } from "firebase/database";
 import { getAnalytics } from "firebase/analytics";
 
-// Deine Firebase-Konfiguration
 const firebaseConfig = {
   apiKey: "AIzaSyBnp2TZP8MH0D4RMDXEjyw6oJFQUCOFi5E",
   authDomain: "kirmesbingo.firebaseapp.com",
-  databaseURL: "https://kirmesbingo.firebaseio.com", // Stelle sicher, dass die Database-URL vorhanden ist
+  databaseURL: "https://kirmesbingo-default-rtdb.firebaseio.com", // Stelle sicher, dass die Database-URL korrekt ist
   projectId: "kirmesbingo",
   storageBucket: "kirmesbingo.appspot.com",
   messagingSenderId: "898528761801",
