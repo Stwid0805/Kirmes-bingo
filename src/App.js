@@ -3,7 +3,7 @@ import { database, ref, set, onValue } from './firebaseConfig';
 import './App.css';
 
 const initialItems = [
-  { text: "Ein Paar, das sich küsste", isMainTask: true },
+  { text: "Ein Paar, das sich küsst", isMainTask: true },
   { text: "Jemand, der Popcorn isst", isMainTask: true },
   { text: "Eine Person mit Cowboy-Hut und einem Bier", isMainTask: true },
   { text: "Eine Gruppe, die Selfies macht und lacht", isMainTask: true },
@@ -53,7 +53,7 @@ function App() {
       const data = snapshot.val();
       if (data) {
         const sortedLeaderboard = Object.entries(data)
-          .map(([name, { progress }]) => ({ name, progress }))
+          .map(([name, { progress, completedTasks }]) => ({ name, progress, completedTasks }))
           .sort((a, b) => b.progress - a.progress);
         setLeaderboard(sortedLeaderboard);
       } else {
@@ -72,11 +72,12 @@ function App() {
     newCard[index].checked = !newCard[index].checked;
     setBingoCard(newCard);
 
-    const newProgress = newCard.filter(item => item.checked).length;
+    const completedTasks = newCard.filter(item => item.checked).map(item => item.text);
+    const newProgress = completedTasks.length;
     setProgress(newProgress);
 
     if (username) {
-      set(ref(database, `leaderboard/${username}`), { progress: newProgress });
+      set(ref(database, `leaderboard/${username}`), { progress: newProgress, completedTasks });
     }
   };
 
@@ -87,7 +88,7 @@ function App() {
     }
     setIsNameSubmitted(true);
     localStorage.setItem("username", username); // Speichert den Namen im localStorage
-    set(ref(database, `leaderboard/${username}`), { progress: 0 });
+    set(ref(database, `leaderboard/${username}`), { progress: 0, completedTasks: [] });
   };
 
   const addCustomTask = () => {
@@ -111,10 +112,12 @@ function App() {
     const newCard = bingoCard.filter((_, i) => i !== index);
     setBingoCard(newCard);
 
-    const newProgress = newCard.filter(item => item.checked).length;
+    const completedTasks = newCard.filter(item => item.checked).map(item => item.text);
+    const newProgress = completedTasks.length;
     setProgress(newProgress);
+
     if (username) {
-      set(ref(database, `leaderboard/${username}`), { progress: newProgress });
+      set(ref(database, `leaderboard/${username}`), { progress: newProgress, completedTasks });
     }
   };
 
@@ -176,8 +179,15 @@ function App() {
       )}
       <h3>Rangliste</h3>
       <ul className="leaderboard">
-        {leaderboard.map(({ name, progress }, index) => (
-          <li key={index}>{name}: {progress} Punkte</li>
+        {leaderboard.map(({ name, progress, completedTasks }, index) => (
+          <li key={index}>
+            <strong>{name}</strong>: {progress} Punkte
+            <ul>
+              {completedTasks && completedTasks.map((task, i) => (
+                <li key={i}>- {task}</li>
+              ))}
+            </ul>
+          </li>
         ))}
       </ul>
     </div>
