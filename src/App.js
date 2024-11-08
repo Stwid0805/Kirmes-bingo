@@ -138,7 +138,7 @@ function App() {
         className="top-right-image" // CSS-Klasse für das Styling
       />
       
-      <h1>Kirmes Bingo</h1>
+      <h1>Kirmes Bingo Soester Allerheiligenkirmes made by Steve</h1>
       {!isNameSubmitted ? (
         <div>
           <input
