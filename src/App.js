@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { database, ref, set, onValue } from './firebaseConfig';
+import { database, ref, set, remove, onValue } from './firebaseConfig'; // Importiere `remove` für das Löschen
 import './App.css';
 
 const initialItems = [
@@ -121,6 +121,13 @@ function App() {
     }
   };
 
+  // Funktion zum Entfernen eines Teilnehmers aus der Rangliste
+  const removeParticipant = (participantName) => {
+    if (window.confirm(`Möchtest du ${participantName} wirklich aus der Rangliste entfernen?`)) {
+      remove(ref(database, `leaderboard/${participantName}`));
+    }
+  };
+
   return (
     <div className="App">
       <h1>Kirmes Bingo</h1>
@@ -187,6 +194,12 @@ function App() {
                 <li key={i}>- {task}</li>
               ))}
             </ul>
+            <button
+              onClick={() => removeParticipant(name)}
+              style={{ marginTop: "5px", padding: "5px", backgroundColor: "red", color: "white", border: "none" }}
+            >
+              Entfernen
+            </button>
           </li>
         ))}
       </ul>
