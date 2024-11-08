@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from 'react';
-import { database, ref, set, remove, onValue } from './firebaseConfig'; // Importiere `remove` für das Löschen
+import { database, ref, set, onValue } from './firebaseConfig';
+import { remove } from "firebase/database"; // Importiere `remove` direkt aus `firebase/database`
 import './App.css';
 
 const initialItems = [
-  { text: "Ein Paar, das sich küsste", isMainTask: true },
+  { text: "Ein Paar, das sich küsst", isMainTask: true },
   { text: "Jemand, der Popcorn isst", isMainTask: true },
   { text: "Eine Person mit Cowboy-Hut und einem Bier", isMainTask: true },
   { text: "Eine Gruppe, die Selfies macht und lacht", isMainTask: true },
